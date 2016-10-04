@@ -10,14 +10,14 @@ def test_create_user(client):
     assert resp.json['signingKey']
 
 
-def test_create_manifestation(client, user):
+def test_create_manifestation(client, alice):
     payload = {
         'manifestation': {
             'name': 'The Fellowship of the Ring',
             'datePublished': '29-07-1954',
             'url': 'http://localhost/lordoftherings.txt',
         },
-        'copyrightHolder': user,
+        'copyrightHolder': alice,
         'work': {
             'name': 'The Lord of the Rings Triology',
             'author': 'J. R. R. Tolkien',
@@ -59,13 +59,13 @@ def test_create_manifestation(client, user):
     assert resp.status_code == 200
 
 
-def test_create_manifestation_missing_single_attribute(client, user):
+def test_create_manifestation_missing_single_attribute(client, alice):
     payload = {
         'manifestation': {
             'name': 'The Fellowship of the Ring',
             'url': 'http://localhost/lordoftherings.txt',
         },
-        'copyrightHolder': user,
+        'copyrightHolder': alice,
         'work': {
             'name': 'The Lord of the Rings Triology',
             'author': 'J. R. R. Tolkien',
@@ -97,9 +97,9 @@ def test_create_manifestation_missing_argument_in_body(client):
         'Missing required parameter in the JSON body'
 
 
-def test_create_right(client, user):
+def test_create_right(client, alice):
     payload = {
-        'currentHolder': user,
+        'currentHolder': alice,
         'right': {
             'license': 'http://www.ascribe.io/terms',
         },
@@ -113,7 +113,7 @@ def test_create_right(client, user):
             '@id': '',
             'allowedBy': payload['sourceRightId'],
             'license': 'http://www.ascribe.io/terms',
-        }
+        },
     }
 
     resp = client.post(url_for('right_views.rightapi'),
@@ -123,9 +123,9 @@ def test_create_right(client, user):
     assert resp.json == expected
 
 
-def test_create_right_missing_single_attribute(client, user):
+def test_create_right_missing_single_attribute(client, alice):
     payload = {
-        'currentHolder': user,
+        'currentHolder': alice,
         'right': {
             'notALicense': 'this is not a license',
         },
@@ -139,9 +139,9 @@ def test_create_right_missing_single_attribute(client, user):
         "'`license` must be provided'"
 
 
-def test_create_right_missing_argument_in_body(client, user):
+def test_create_right_missing_argument_in_body(client, alice):
     payload = {
-        'currentHolder': user,
+        'currentHolder': alice,
         'right': {
             'license': 'http://www.ascribe.io/terms',
         },
